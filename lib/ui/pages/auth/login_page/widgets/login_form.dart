@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blog/_core/constants/move.dart';
 import 'package:flutter_blog/_core/constants/size.dart';
 import 'package:flutter_blog/_core/utils/validator_util.dart';
+import 'package:flutter_blog/data/dto/user_request.dart';
+import 'package:flutter_blog/data/provider/session_provider.dart';
 import 'package:flutter_blog/ui/widgets/custom_auth_text_form_field.dart';
 import 'package:flutter_blog/ui/widgets/custom_elavated_button.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoginForm extends StatelessWidget {
+// TODO 프로바이더에 접근하려면 ref 객체가 필요하다.
+// Stateless => ConsumerWidget 으로 변경하는거임
+class LoginForm extends ConsumerWidget {
   final _formKey = GlobalKey<FormState>();
   final _username = TextEditingController();
   final _password = TextEditingController();
@@ -13,7 +18,7 @@ class LoginForm extends StatelessWidget {
   LoginForm({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Form(
       key: _formKey,
       child: Column(
@@ -33,13 +38,15 @@ class LoginForm extends StatelessWidget {
           ),
           const SizedBox(height: largeGap),
           CustomElevatedButton(
-              text: "로그인",
-              funPageRoute: () {
-                Navigator.popAndPushNamed(context, Move.postListPage);
-                // if (_formKey.currentState!.validate()) {
-                //   Navigator.popAndPushNamed(context, Move.postListPage);
-                // }
-              }),
+            text: "로그인",
+            funPageRoute: () {
+              if (_formKey.currentState!.validate()) {
+                LoginReqDTO loginReqDTO = LoginReqDTO(
+                    username: _username.text, password: _password.text);
+                ref.read(sessionProvider).login(loginReqDTO);
+              }
+            },
+          ),
         ],
       ),
     );

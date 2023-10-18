@@ -12,6 +12,7 @@ class Move {
   static String userInfoPage = "/user/info";
 }
 
+// Widget Function(BuildContext) -> dynamic으로도 가능!
 Map<String, Widget Function(BuildContext)> getRouters() {
   return {
     Move.loginPage: (context) => const LoginPage(),
