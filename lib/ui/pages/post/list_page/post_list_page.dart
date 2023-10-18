@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog/data/dto/user_request.dart';
 import 'package:flutter_blog/data/provider/session_provider.dart';
+import 'package:flutter_blog/ui/pages/post/list_page/post_list_view_model.dart';
 import 'package:flutter_blog/ui/pages/post/list_page/wiegets/post_list_body.dart';
 import 'package:flutter_blog/ui/widgets/custom_navigator.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 
 class PostListPage extends ConsumerWidget {
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -22,7 +24,10 @@ class PostListPage extends ConsumerWidget {
       ),
       body: RefreshIndicator(
         key: refreshKey,
-        onRefresh: () async {},
+        onRefresh: () async {
+          Logger().d("리플래쉬됨!");
+          ref.read(postListProvider.notifier).notifyInit();
+        },
         child: PostListBody(),
       ),
     );
